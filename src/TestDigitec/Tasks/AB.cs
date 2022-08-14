@@ -32,16 +32,25 @@ namespace Tasks
             // Let's determine the number of delete actions required for each possible "cut" (index to divide
             // the string into an A and B sequence).
             var requiredActionsByCutIndex = new int[abString.Length];
-            
+
             // Forward-iterate and determine number of B's we'd have to delete from the A sequence.
+            // (Also, simultaneously check for illegal characters.)
             var numberOfBs = 0;
             for (var cutIndex = 0; cutIndex < abString.Length; cutIndex++)
             {
                 requiredActionsByCutIndex[cutIndex] = numberOfBs;
 
+                // Count B's.
                 if (abString[cutIndex] == 'B')
                 {
                     numberOfBs++;
+                }
+
+                // Let's also check for illegal characters while iterating.
+                if (abString[cutIndex] != 'A' &&
+                    abString[cutIndex] != 'B')
+                {
+                    throw new ArgumentException($"The string contains an illegal character '{abString[cutIndex]}' at index {cutIndex}.");
                 }
             }
 
@@ -60,6 +69,7 @@ namespace Tasks
                     minActionsRequired = requiredActionsByCutIndex[cutIndex];
                 }
 
+                // Count A's.
                 if (abString[cutIndex] == 'A')
                 {
                     numberOfAs++;
